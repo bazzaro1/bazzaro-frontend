@@ -127,46 +127,45 @@ export default function Home() {
           Tavsiya etilgan mahsulotlar
         </h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col overflow-hidden"
-            >
-              {/* RASM – MUHIM QISM */}
-              <div className="w-full h-48 bg-gray-100">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
+       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+  {products.map((product) => (
+    <div key={product.id} className="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col overflow-hidden">
+      
+      {/* RASM */}
+      <div className="w-full aspect-[4/3] bg-gray-100 overflow-hidden">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+          loading="lazy"
+        />
+      </div>
 
-              <div className="p-4 flex flex-col flex-1">
-                <h3 className="font-semibold text-sm mb-2 line-clamp-2">
-                  {product.name}
-                </h3>
+      {/* INFO */}
+      <div className="p-4 flex flex-col flex-1">
+        <h3 className="font-semibold text-sm mb-2 line-clamp-2">
+          {product.name}
+        </h3>
 
-                <div className="mb-3">
-                  <p className="text-xs text-gray-400 line-through">
-                    {product.oldPrice.toLocaleString()} so‘m
-                  </p>
-                  <p className="text-red-600 font-bold">
-                    {product.price.toLocaleString()} so‘m
-                  </p>
-                </div>
-
-                <button
-                  onClick={() => dispatch(addToCart(product))}
-                  className="mt-auto bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-2 rounded"
-                >
-                  Savatchaga qo‘shish
-                </button>
-              </div>
-            </div>
-          ))}
+        <div className="mb-3">
+          <p className="text-xs text-gray-400 line-through">
+            {product.oldPrice.toLocaleString()} so‘m
+          </p>
+          <p className="text-red-600 font-bold">
+            {product.price.toLocaleString()} so‘m
+          </p>
         </div>
+
+        <button
+          onClick={() => dispatch(addToCart(product))}
+          className="mt-auto bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-2 rounded"
+        >
+          Savatchaga qo‘shish
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
       </section>
     </div>
   );
