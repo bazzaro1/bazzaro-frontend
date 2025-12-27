@@ -1,172 +1,132 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/cartSlice";
-import Slider from "react-slick";
-
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-
-/* =======================
-   DEMO MAHSULOTLAR
-======================= */
-const products = [
-  {
-    id: 1,
-    name: "Mahsulot 1",
-    price: 130000,
-    oldPrice: 150000,
-    image: "https://picsum.photos/600/400?random=1",
-  },
-  {
-    id: 2,
-    name: "Mahsulot 2",
-    price: 125000,
-    oldPrice: 140000,
-    image: "https://picsum.photos/600/400?random=2",
-  },
-  {
-    id: 3,
-    name: "Mahsulot 3",
-    price: 95000,
-    oldPrice: 110000,
-    image: "https://picsum.photos/600/400?random=3",
-  },
-  {
-    id: 4,
-    name: "Mahsulot 4",
-    price: 145000,
-    oldPrice: 165000,
-    image: "https://picsum.photos/600/400?random=4",
-  },
-];
-
-/* =======================
-   BANNERLAR
-======================= */
-const bannerImages = [
-  "https://picsum.photos/id/1018/1600/600",
-  "https://picsum.photos/id/1015/1600/600",
-];
-
-/* =======================
-   SLIDER SOZLAMASI
-======================= */
-const sliderSettings = {
-  dots: true,
-  infinite: true,
-  speed: 500,
-  autoplay: true,
-  autoplaySpeed: 4000,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-};
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const dispatch = useDispatch();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("https://api.bazzaro.uz/api/products") // API manzilni tekshir
+      .then((res) => {
+        setProducts(res.data.data || res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Products error:", err);
+        setLoading(false);
+      });
+  }, []);
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 min-h-screen">
 
-      {/* =======================
-         HERO / BANNER
-      ======================= */}
-      <section className="mb-12">
-        <Slider {...sliderSettings}>
-          {bannerImages.map((img, index) => (
-            <div key={index} className="relative">
-              <img
-                src={img}
-                alt="Banner"
-                className="w-full h-[420px] object-cover"
-              />
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <div className="text-center text-white px-4">
-                  <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                    Bazzaro Marketpleysi
-                  </h1>
-                  <p className="mb-6 text-lg">
-                    Eng sifatli mahsulotlar – eng qulay narxlarda
-                  </p>
-                  <Link
-                    to="/shop"
-                    className="inline-block bg-white text-indigo-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100"
-                  >
-                    Xaridni boshlash
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </Slider>
-      </section>
-
-      {/* =======================
-         REKLAMA
-      ======================= */}
-      <section className="bg-indigo-600 text-white py-10 mb-12">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">🎁 Super taklif!</h2>
-            <p>Bugun ro‘yxatdan o‘ting va 10% chegirma oling</p>
+      {/* HERO */}
+      <div className="max-w-7xl mx-auto px-4 pt-6">
+        <div className="rounded-2xl overflow-hidden relative">
+          <img
+            src="https://picsum.photos/1200/400"
+            alt="Hero"
+            className="w-full h-[220px] sm:h-[300px] object-cover"
+          />
+          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white">
+            <h1 className="text-2xl sm:text-4xl font-bold mb-2 text-center">
+              Bazzaro Marketpleysiga xush kelibsiz
+            </h1>
+            <p className="text-sm sm:text-base mb-4">
+              Siz izlagan mahsulotlarning barchasi shu yerda
+            </p>
+            <Link
+              to="/products"
+              className="bg-white text-black px-5 py-2 rounded-full font-semibold hover:bg-gray-200"
+            >
+              Hozir xarid qiling
+            </Link>
           </div>
-          <Link
-            to="/seller"
-            className="mt-4 md:mt-0 bg-white text-indigo-600 px-6 py-3 rounded font-semibold"
-          >
-            Sotuvchi bo‘lish
-          </Link>
         </div>
-      </section>
+      </div>
 
-      {/* =======================
-         MAHSULOTLAR
-      ======================= */}
-      <section className="max-w-7xl mx-auto px-4 pb-16">
-        <h2 className="text-2xl font-bold mb-6">
+      {/* SUPER TAKLIF */}
+      <div className="max-w-7xl mx-auto px-4 py-6 text-center">
+        🎁 <span className="font-semibold">Super taklif!</span>
+        <p className="text-sm text-gray-600">
+          Bugun ro‘yxatdan o‘ting va 10% chegirma oling
+        </p>
+        <Link
+          to="/seller"
+          className="text-indigo-600 text-sm font-medium"
+        >
+          Sotuvchi bo‘lish
+        </Link>
+      </div>
+
+      {/* MAHSULOTLAR */}
+      <div className="max-w-7xl mx-auto px-4 pb-12">
+        <h2 className="text-xl font-bold mb-4">
           Tavsiya etilgan mahsulotlar
         </h2>
 
-       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-  {products.map((product) => (
-    <div key={product.id} className="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col overflow-hidden">
-      
-      {/* RASM */}
-      <div className="w-full aspect-[4/3] bg-gray-100 overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-          loading="lazy"
-        />
+        {loading ? (
+          <div className="text-center py-20">Yuklanmoqda...</div>
+        ) : (
+          <div
+            className="
+              grid
+              grid-cols-2
+              sm:grid-cols-3
+              md:grid-cols-4
+              lg:grid-cols-5
+              gap-4
+            "
+          >
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col overflow-hidden"
+              >
+                {/* RASM */}
+                <div className="w-full h-[180px] bg-gray-100 overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+
+                {/* INFO */}
+                <div className="p-3 flex flex-col flex-1">
+                  <h3 className="text-sm font-medium line-clamp-2 mb-2">
+                    {product.name}
+                  </h3>
+
+                  <div className="mb-3">
+                    {product.oldPrice && (
+                      <p className="text-xs text-gray-400 line-through">
+                        {product.oldPrice.toLocaleString()} so‘m
+                      </p>
+                    )}
+                    <p className="text-red-600 font-bold text-sm">
+                      {product.price.toLocaleString()} so‘m
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => dispatch(addToCart(product))}
+                    className="mt-auto bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2 rounded-lg"
+                  >
+                    Savatchaga
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
-      {/* INFO */}
-      <div className="p-4 flex flex-col flex-1">
-        <h3 className="font-semibold text-sm mb-2 line-clamp-2">
-          {product.name}
-        </h3>
-
-        <div className="mb-3">
-          <p className="text-xs text-gray-400 line-through">
-            {product.oldPrice.toLocaleString()} so‘m
-          </p>
-          <p className="text-red-600 font-bold">
-            {product.price.toLocaleString()} so‘m
-          </p>
-        </div>
-
-        <button
-          onClick={() => dispatch(addToCart(product))}
-          className="mt-auto bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-2 rounded"
-        >
-          Savatchaga qo‘shish
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
-      </section>
     </div>
   );
 }
